@@ -5,7 +5,7 @@ namespace API.Models
     public class Person
     {
         [Key]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [Required(ErrorMessage = "Firstname is required")]
         public string firstname { get; set; } = "";

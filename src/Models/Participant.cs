@@ -7,10 +7,10 @@ namespace API.Models
     {
         [ForeignKey("CalendarEvent")]
         [Required(ErrorMessage = "Participant Id is required")]
-        public int CalendarEventId { get; set; }
+        public string CalendarEventId { get; set; }
 
-        [ForeignKey("Participant")]
-        [Required(ErrorMessage = "Participant Id is required")]
-        public int ParticipantId { get; set; }
+        [ForeignKey("Person")]
+        [Required(ErrorMessage = "Person Id is required")]
+        public string PersonId { get; set; }
     }
 }

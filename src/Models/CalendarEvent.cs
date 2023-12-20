@@ -6,7 +6,7 @@ namespace API.Models
     public class CalendarEvent
     {
         [Key]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [Required(ErrorMessage = "Date is required")]
         public DateTime Date { get; set; }
