@@ -1,0 +1,17 @@
+version: "3.8"
+
+# Define a network to set Docker images to in order for them to communicate with each other
+networks:
+  data-persistence:
+
+services:
+  database:
+    container_name: ${DB_NAME}
+    image: ${DB_IMAGE}
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    networks:
+      - data-persistence
+    ports:
+      - 5432:5432
