@@ -1,3 +1,6 @@
 # .NET files
 obj
 bin
+
+# env
+.env
