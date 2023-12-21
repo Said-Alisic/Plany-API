@@ -8,11 +8,8 @@ namespace API.Models
         [Key]
         public string? Id { get; set; }
 
-        [Required(ErrorMessage = "Date is required")]
-        public DateTime Date { get; set; }
-
-        [Required(ErrorMessage = "Time of Day is required")]
-        public string TimeOfDay { get; set; } = "";
+        [Required(ErrorMessage = "DateAndTime is required")]
+        public DateTime DateAndTime { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; } = "";
