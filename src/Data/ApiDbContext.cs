@@ -1,3 +1,4 @@
+using API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
@@ -7,6 +8,10 @@ namespace API.Data
         public ApiDbContext(DbContextOptions<ApiDbContext> options)
             : base(options) { }
 
-        // TODO: Define DbSet properties for the CalendarEvent entity
+        public DbSet<CalendarEvent> CalendarEvents { get; set; }
+
+        public DbSet<Participant> Participants { get; set; }
+
+        public DbSet<Person> People { get; set; }
     }
 }
