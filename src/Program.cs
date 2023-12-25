@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Load environment variables from .env file
-DotNetEnv.Env.Load();
+DotNetEnv.Env.Load("../.env");
 
 // Configure the database connection
 string host = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
