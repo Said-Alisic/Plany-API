@@ -1,19 +1,25 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Models
 {
+    [Table("person")]
     public class Person
     {
         [Key]
+        [Column("id", TypeName = "uuid")]
         public string? Id { get; set; }
 
         [Required(ErrorMessage = "Firstname is required")]
-        public string firstname { get; set; } = "";
+        [Column("firstname", TypeName = "varchar(255)")]
+        public string Firstname { get; set; } = "";
 
         [Required(ErrorMessage = "Lastname is required")]
-        public string lastname { get; set; } = "";
+        [Column("lastname", TypeName = "varchar(255)")]
+        public string Lastname { get; set; } = "";
 
         [Required(ErrorMessage = "Email is required")]
-        public string email { get; set; } = "";
+        [Column("email", TypeName = "varchar(255)")]
+        public string Email { get; set; } = "";
     }
 }
