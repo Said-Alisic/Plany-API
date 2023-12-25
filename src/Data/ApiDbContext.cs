@@ -1,6 +1,8 @@
 using API.Models;
 using Microsoft.EntityFrameworkCore;
 
+#pragma warning disable CS8618
+
 namespace API.Data
 {
     public class ApiDbContext : DbContext
