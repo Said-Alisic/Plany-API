@@ -14,6 +14,6 @@ namespace API.Data
 
         public DbSet<Participant> Participants { get; set; }
 
-        public DbSet<Person> People { get; set; }
+        public DbSet<Person> Persons { get; set; }
     }
 }
