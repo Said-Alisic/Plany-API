@@ -8,7 +8,7 @@ namespace API.Models
     {
         [Key]
         [Column("id", TypeName = "uuid")]
-        public string? Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required(ErrorMessage = "Firstname is required")]
         [Column("firstname", TypeName = "varchar(255)")]
