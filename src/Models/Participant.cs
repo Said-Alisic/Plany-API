@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Models
 {
     [Table("participant")]
-    [Keyless]
     public class Participant
     {
         [ForeignKey("CalendarEvent")]
