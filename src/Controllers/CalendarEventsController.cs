@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 #pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8600, CS8602 // Converting null literal or possible null value to non-nullable type.
 
 namespace API.Controllers
 {
@@ -55,12 +56,12 @@ namespace API.Controllers
         {
             if (calendarEvent == null)
             {
-                return BadRequest("Invalid data provided!");
+                return BadRequest("Invalid data provided.");
             }
 
             if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid data provided!");
+                return BadRequest("Invalid data provided.");
             }
 
             EntityEntry createdCalendarEvent = await _apiDbContext.CalendarEvents.AddAsync(
@@ -96,6 +97,44 @@ namespace API.Controllers
             await _apiDbContext.SaveChangesAsync();
 
             return Created("api/calendar-events", response);
+        }
+
+        [HttpDelete, Route("{id}")]
+        public async Task<ActionResult> DeleteCalendarEvent([FromRoute] string id)
+        {
+            // Checks if the `id` is a GUID string, if successful, parses it and assigns it to a new variable
+            if (!Guid.TryParse(id, out Guid calendarEventId))
+            {
+                return BadRequest("Invalid GUID id format provided.");
+            }
+
+            // Find CalendarEvent to delete.
+            CalendarEvent existingCalendarEvent = await _apiDbContext.CalendarEvents.FindAsync(
+                calendarEventId
+            );
+
+            if (existingCalendarEvent == null)
+            {
+                return NotFound("Calendar event with the given id could not be found.");
+            }
+
+            // Prepare deletion of CalendarEvent in the db
+            _apiDbContext.CalendarEvents.Remove(existingCalendarEvent);
+
+            try
+            {
+                // Save changes to db
+                await _apiDbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                throw new ApplicationException(
+                    "An error occured while saving changes to the database.",
+                    e
+                );
+            }
+
+            return NoContent();
         }
     }
 }
