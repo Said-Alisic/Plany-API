@@ -23,6 +23,6 @@ CREATE TABLE "participant" (
     "calendarEventId" uuid NOT NULL,
     "personId" uuid NOT NULL,
     PRIMARY KEY ("calendarEventId", "personId"),
-    FOREIGN KEY ("calendarEventId") REFERENCES "calendarEvent" ("id"),
-    FOREIGN KEY ("personId") REFERENCES "person" ("id")
+    FOREIGN KEY ("calendarEventId") REFERENCES "calendarEvent" ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("personId") REFERENCES "person" ("id") ON DELETE CASCADE
 );
