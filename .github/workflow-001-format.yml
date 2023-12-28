@@ -1,13 +1,16 @@
-name: dotnet format
+name: Workflow 001 - Format
 
 on:
-  push:
+  pull_request:
+    types: [ready_for_review, synchronize, reopened]
     paths:
       - "**.cs"
       - ".editorconfig"
+  workflow_dispatch:
 
 jobs:
-  check-format:
+  dotnet-format:
+    if: github.event.pull_request.draft == false || contains(github.event_name, 'workflow_dispatch')
     runs-on: ubuntu-22.04.3
 
     steps:
