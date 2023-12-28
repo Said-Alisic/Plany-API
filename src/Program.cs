@@ -1,4 +1,4 @@
-using API.Data;
+﻿using API.Data;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -19,7 +19,7 @@ string connectionString =
 builder.Services.AddControllers();
 
 // Add database context with the configured connection string
-builder.Services.AddDbContext<ApiDbContext>(options => options.UseNpgsql(connectionString)); // TODO: Create db context class for the calendar events
+builder.Services.AddDbContext<ApiDbContext>(options => options.UseNpgsql(connectionString));
 
 WebApplication app = builder.Build();
 
