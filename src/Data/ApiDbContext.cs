@@ -1,4 +1,4 @@
-using API.Models;
+﻿using API.Models;
 using Microsoft.EntityFrameworkCore;
 
 #pragma warning disable CS8618

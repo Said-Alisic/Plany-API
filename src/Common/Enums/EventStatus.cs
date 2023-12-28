@@ -1,4 +1,4 @@
-namespace API.Common.Enums
+﻿namespace API.Common.Enums
 {
     public enum EventStatus
     {
