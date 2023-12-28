@@ -1,20 +1,22 @@
 name: Workflow 001 - Format
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [ready_for_review, synchronize, reopened]
     paths:
       - "**.cs"
       - ".editorconfig"
-  workflow_dispatch:
 
 jobs:
   dotnet-format:
     if: github.event.pull_request.draft == false || contains(github.event_name, 'workflow_dispatch')
+
+    # Setup runner - `ubuntu-22.04` is as of 12/2023 the latest LTS ubuntu runner
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Setup .NET Core
+      - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "6.0.x"
@@ -26,4 +28,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run dotnet format
-        run: dotnet format . --verbosity diagnostic
+        run: dotnet format . --verify-no-changes --verbosity diagnostic
