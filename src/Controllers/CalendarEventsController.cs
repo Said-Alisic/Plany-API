@@ -1,6 +1,8 @@
 ﻿using API.Common.Dto;
+using API.Common.Helpers.AutoMapper;
 using API.Data;
 using API.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -15,12 +17,20 @@ namespace API.Controllers
     public class CalendarEventsController : Controller
     {
         private readonly ApiDbContext _apiDbContext;
+        private readonly Mapper _mapper;
 
         public CalendarEventsController(ApiDbContext apiDbContext)
         {
+            // Setup db connection
             _apiDbContext = apiDbContext;
 
             _apiDbContext.Database.EnsureCreated();
+
+            MapperConfiguration config = new MapperConfiguration(
+                cfg => cfg.AddProfile<CalendarEventMapperProfile>()
+            );
+
+            _mapper = new Mapper(config);
         }
 
         // SEPARATOR: GET Endpoints
@@ -45,6 +55,58 @@ namespace API.Controllers
             }
 
             return Ok(calendarEvents);
+        }
+
+        [HttpGet, Route("{id}")]
+        public async Task<
+            ActionResult<GetCalendarEventResponseDto>
+        > GetCalendarEventWithParticipantsInformation(
+            [FromRoute] string id,
+            [FromQuery] bool omitEventParticipants = false
+        )
+        {
+            // Checks if the `id` is a GUID string, if successful, parses it and assigns it to a new variable
+            if (!Guid.TryParse(id, out Guid calendarEventId))
+            {
+                return BadRequest("Invalid GUID id format provided.");
+            }
+
+            CalendarEvent calendarEvent =
+                await _apiDbContext.CalendarEvents.FindAsync(calendarEventId) ?? null;
+
+            if (calendarEvent == null)
+            {
+                return NotFound();
+            }
+
+            GetCalendarEventResponseDto response = new GetCalendarEventResponseDto();
+
+            if (!omitEventParticipants)
+            {
+                List<Guid> participantsPersonIds =
+                    await _apiDbContext
+                        .Participants.Where(item => item.CalendarEventId.Equals(calendarEventId))
+                        .Select(item => item.PersonId)
+                        .ToListAsync() ?? null;
+
+                // If participants' personIds were found, search database for those persons and add it to the response
+                if (participantsPersonIds != null && participantsPersonIds.Any())
+                {
+                    List<Person> eventParticipants =
+                        await _apiDbContext
+                            .Persons.Where(item => participantsPersonIds.Contains(item.Id))
+                            .ToListAsync() ?? null;
+
+                    response = _mapper.Map<GetCalendarEventResponseDto>(calendarEvent);
+                    response.EventParticipants = eventParticipants;
+
+                    return Ok(response);
+                }
+            }
+
+            response = _mapper.Map<GetCalendarEventResponseDto>(calendarEvent);
+
+            return Ok(response);
         }
 
         // SEPARATOR: POST Endpoints
@@ -99,6 +161,7 @@ namespace API.Controllers
             return Created("api/calendar-events", response);
         }
 
+        // SEPARATOR: DELETE Endpoints
         [HttpDelete, Route("{id}")]
         public async Task<ActionResult> DeleteCalendarEvent([FromRoute] string id)
         {

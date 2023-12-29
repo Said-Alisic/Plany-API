@@ -3,7 +3,11 @@ name: Workflow 001 - Format
 on:
   workflow_dispatch:
   pull_request:
-    types: [ready_for_review, synchronize, reopened]
+    types: [opened, ready_for_review, synchronize, reopened]
+    paths:
+      - "**.cs"
+      - ".editorconfig"
+  push:
     paths:
       - "**.cs"
       - ".editorconfig"
