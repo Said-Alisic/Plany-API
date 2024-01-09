@@ -6,7 +6,7 @@ using API.Common.Enums;
 
 namespace API.Models
 {
-    [Table("calendarEvent")]
+    [Table("calendarEvents")]
     public class CalendarEvent
     {
         [Key]
@@ -34,5 +34,11 @@ namespace API.Models
         )]
         [Column("status", TypeName = "varchar(50)")]
         public string Status { get; set; }
+
+        [Column("createdAt")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        [Column("updatedAt")]
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

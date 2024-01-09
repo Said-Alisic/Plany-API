@@ -11,5 +11,5 @@ public interface IGetCalendarEventResponseDto
     public string Location { get; set; }
     public string Status { get; set; }
 
-    List<Person>? EventParticipants { get; set; }
+    List<User>? EventParticipants { get; set; }
 }
