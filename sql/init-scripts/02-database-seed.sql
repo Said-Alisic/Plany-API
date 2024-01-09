@@ -1,5 +1,31 @@
--- Insert CalendarEvent seed data
-INSERT INTO "calendarEvent" ("id", "dateAndTime", "title", "location", "status")
+-- Insert users seed data
+INSERT INTO "users" ("id", "firstname", "lastname", "email", "password", "theme", "notificationsEnabled")
+VALUES
+  ('39bf5de4-4049-4463-bdbb-007d2ee02474', 'John', 'Doe', 'john.doe@example.com', 'password', 'SYSTEM', false),
+  ('d1aef966-6661-4959-8d53-957265ee04a0', 'Jane', 'Doe', 'jane.doe@example.com', 'password', 'SYSTEM', false),
+  ('7777c377-4dd6-4346-8f52-75a96992f078', 'Alice', 'Smith', 'alice.smith@example.com', 'password', 'SYSTEM', false),
+  ('3a84c478-24dd-4bba-9fae-fee48788c35f', 'Bob', 'Johnson', 'bob.johnson@example.com', 'password', 'SYSTEM', false),
+  ('9e9ebd4e-7224-4c08-8d1a-d42b3fb367e2', 'Emily', 'Williams', 'emily.williams@example.com', 'password', 'SYSTEM', false),
+  ('94a9a324-d827-4b90-88b6-90dc62d3d5ce', 'Michael', 'Brown', 'michael.brown@example.com', 'password', 'SYSTEM', false),
+  ('7d0879a0-d33e-4925-a98c-128c5f8f7cef', 'Sophia', 'Jones', 'sophia.jones@example.com', 'password', 'SYSTEM', false),
+  ('4499c71a-83e2-4413-8eb6-d64038f1cf99', 'David', 'Taylor', 'david.taylor@example.com', 'password', 'SYSTEM', false),
+  ('026bc1e8-2c93-4d4c-8f1f-4de64b3fbfc2', 'Olivia', 'Martinez', 'olivia.martinez@example.com', 'password', 'SYSTEM', false),
+  ('3294cc62-9b9e-4330-af3b-d9060320e4a1', 'Daniel', 'Anderson', 'daniel.anderson@example.com', 'password', 'SYSTEM', false),
+  ('7e48612c-19fc-4ccc-9651-2782e4a9a1f5', 'Emma', 'Thomas', 'emma.thomas@example.com', 'password', 'SYSTEM', false),
+  ('d1adfbf6-06f1-4016-90aa-5dccdd41fb89', 'Christopher', 'Harris', 'christopher.harris@example.com', 'password', 'SYSTEM', false),
+  ('ff6ba20e-0900-4c15-a39e-6baab5d2d8a4', 'Ava', 'Clark', 'ava.clark@example.com', 'password', 'SYSTEM', false),
+  ('58d65c8b-3fd1-4738-b863-4a7b4abf74d3', 'Matthew', 'Lewis', 'matthew.lewis@example.com', 'password', 'SYSTEM', false),
+  ('bee967a7-0c2a-44f8-8044-d73f588a2c02', 'Madison', 'Moore', 'madison.moore@example.com', 'password', 'SYSTEM', false),
+  ('fa0f4d15-1a42-4bfd-a315-a3e59249367a', 'Ethan', 'White', 'ethan.white@example.com', 'password', 'SYSTEM', false),
+  ('63017c5e-f2d1-4719-a3b9-3bc6917020d7', 'Sophie', 'Scott', 'sophie.scott@example.com', 'password', 'SYSTEM', false),
+  ('ab252f7d-ac3e-4db3-9d4d-a184fe337d7c', 'Justin', 'King', 'justin.king@example.com', 'password', 'SYSTEM', false),
+  ('dbc820cc-1fae-48fd-987d-043050c8028c', 'Victoria', 'Young', 'victoria.young@example.com', 'password', 'SYSTEM', false),
+  ('3129e20f-484a-4c55-b482-8d7e9d30ede5', 'William', 'Hill', 'william.hill@example.com', 'password', 'SYSTEM', false),
+  ('ec45a75d-8bb2-4149-ad05-03b07e0efa9e', 'Isabella', 'Miller', 'isabella.miller@example.com', 'password', 'SYSTEM', false),
+  ('338ab2d0-9e09-41a5-a423-98b6c6cc468c', 'James', 'Allen', 'james.allen@example.com', 'password', 'SYSTEM', false);
+
+-- Insert calendarEvents seed data
+INSERT INTO "calendarEvents" ("id", "dateAndTime", "title", "location", "status")
 VALUES
   ('407714b2-6d85-4d71-b23a-d4d6609ffab7', '2023-01-01 08:00:00', 'Event 1', 'Location 1', 'ACTIVE'),
   ('91e42a53-d6a3-40a7-bebc-7eb91e1e36cd', '2023-02-02 12:30:00', 'Event 2', 'Location 2', 'COMPLETED'),
@@ -20,39 +46,16 @@ VALUES
   ('b771ae7e-7768-40f4-89cb-1a880bd0a63d', '2024-05-05 16:30:00', 'Event 17', 'Location 17', 'COMPLETED'),
   ('57236a59-5e12-44e0-893a-c0a5c957ff8d', '2024-06-06 18:55:00', 'Event 18', 'Location 18', 'CANCELLED'),
   ('3e06c69e-ac9d-4c62-955c-d61dc9856bdb', '2024-07-07 09:00:00', 'Event 19', 'Location 19', 'ACTIVE'),
-  ('d0136348-63d6-41be-96db-6e95fd8e345b', '2024-08-08 15:40:00', 'Event 20', 'Location 20', 'COMPLETED');
+  ('d0136348-63d6-41be-96db-6e95fd8e345b', '2024-01-01 07:20:00', 'Event 20', 'Location 20', 'COMPLETED'),
+  ('68effe54-6290-4a34-b796-997f655b5489', '2024-01-01 11:45:00', 'Event 21', 'Location 21', 'ACTIVE'),
+  ('10dca8e0-1508-4170-b25c-8938c407d3d4', '2024-01-01 12:30:00', 'Event 22', 'Location 22', 'ACTIVE'),
+  ('7e4f61c9-dd74-4204-8a8b-4d32f9ad4194', '2024-01-01 13:10:00', 'Event 23', 'Location 23', 'CANCELLED'),
+  ('c4c23208-bd42-454d-a358-10067319e96f', '2024-01-01 20:00:00', 'Event 24', 'Location 24', 'COMPLETED'),
+  ('7ccfe662-521c-46f2-88bf-7243c37078d1', '2024-01-01 23:05:00', 'Event 25', 'Location 25', 'ACTIVE');
 
 
-
--- Insert Person seed data
-INSERT INTO "person" ("id", "firstname", "lastname", "email")
-VALUES
-  ('39bf5de4-4049-4463-bdbb-007d2ee02474', 'John', 'Doe', 'john.doe@example.com'),
-  ('d1aef966-6661-4959-8d53-957265ee04a0', 'Jane', 'Doe', 'jane.doe@example.com'),
-  ('7777c377-4dd6-4346-8f52-75a96992f078', 'Alice', 'Smith', 'alice.smith@example.com'),
-  ('3a84c478-24dd-4bba-9fae-fee48788c35f', 'Bob', 'Johnson', 'bob.johnson@example.com'),
-  ('9e9ebd4e-7224-4c08-8d1a-d42b3fb367e2', 'Emily', 'Williams', 'emily.williams@example.com'),
-  ('94a9a324-d827-4b90-88b6-90dc62d3d5ce', 'Michael', 'Brown', 'michael.brown@example.com'),
-  ('7d0879a0-d33e-4925-a98c-128c5f8f7cef', 'Sophia', 'Jones', 'sophia.jones@example.com'),
-  ('4499c71a-83e2-4413-8eb6-d64038f1cf99', 'David', 'Taylor', 'david.taylor@example.com'),
-  ('026bc1e8-2c93-4d4c-8f1f-4de64b3fbfc2', 'Olivia', 'Martinez', 'olivia.martinez@example.com'),
-  ('3294cc62-9b9e-4330-af3b-d9060320e4a1', 'Daniel', 'Anderson', 'daniel.anderson@example.com'),
-  ('7e48612c-19fc-4ccc-9651-2782e4a9a1f5', 'Emma', 'Thomas', 'emma.thomas@example.com'),
-  ('d1adfbf6-06f1-4016-90aa-5dccdd41fb89', 'Christopher', 'Harris', 'christopher.harris@example.com'),
-  ('ff6ba20e-0900-4c15-a39e-6baab5d2d8a4', 'Ava', 'Clark', 'ava.clark@example.com'),
-  ('58d65c8b-3fd1-4738-b863-4a7b4abf74d3', 'Matthew', 'Lewis', 'matthew.lewis@example.com'),
-  ('bee967a7-0c2a-44f8-8044-d73f588a2c02', 'Madison', 'Moore', 'madison.moore@example.com'),
-  ('fa0f4d15-1a42-4bfd-a315-a3e59249367a', 'Ethan', 'White', 'ethan.white@example.com'),
-  ('63017c5e-f2d1-4719-a3b9-3bc6917020d7', 'Sophie', 'Scott', 'sophie.scott@example.com'),
-  ('ab252f7d-ac3e-4db3-9d4d-a184fe337d7c', 'Justin', 'King', 'justin.king@example.com'),
-  ('dbc820cc-1fae-48fd-987d-043050c8028c', 'Victoria', 'Young', 'victoria.young@example.com'),
-  ('3129e20f-484a-4c55-b482-8d7e9d30ede5', 'William', 'Hill', 'william.hill@example.com'),
-  ('ec45a75d-8bb2-4149-ad05-03b07e0efa9e', 'Isabella', 'Miller', 'isabella.miller@example.com'),
-  ('338ab2d0-9e09-41a5-a423-98b6c6cc468c', 'James', 'Allen', 'james.allen@example.com');
-
-
--- Insert Participant seed data
-INSERT INTO "participant" ("calendarEventId", "personId")
+-- Insert participants seed data
+INSERT INTO "participants" ("calendarEventId", "userId")
 VALUES
   ('407714b2-6d85-4d71-b23a-d4d6609ffab7', '39bf5de4-4049-4463-bdbb-007d2ee02474'),
   ('407714b2-6d85-4d71-b23a-d4d6609ffab7', '4499c71a-83e2-4413-8eb6-d64038f1cf99'),
