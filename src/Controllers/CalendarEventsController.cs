@@ -83,18 +83,18 @@ namespace API.Controllers
 
             if (!omitEventParticipants)
             {
-                List<Guid> participantsPersonIds =
+                List<Guid> participantsUserIds =
                     await _apiDbContext
                         .Participants.Where(item => item.CalendarEventId.Equals(calendarEventId))
-                        .Select(item => item.PersonId)
+                        .Select(item => item.UserId)
                         .ToListAsync() ?? null;
 
-                // If participants' personIds were found, search database for those persons and add it to the response
-                if (participantsPersonIds != null && participantsPersonIds.Any())
+                // If participants' userIds were found, search database for those users and add it to the response
+                if (participantsUserIds != null && participantsUserIds.Any())
                 {
-                    List<Person> eventParticipants =
+                    List<User> eventParticipants =
                         await _apiDbContext
-                            .Persons.Where(item => participantsPersonIds.Contains(item.Id))
+                            .Users.Where(item => participantsUserIds.Contains(item.Id))
                             .ToListAsync() ?? null;
 
                     response = _mapper.Map<GetCalendarEventResponseDto>(calendarEvent);
@@ -113,7 +113,7 @@ namespace API.Controllers
         [HttpPost, Route("")]
         public async Task<ActionResult<CreateCalendarEventDto>> CreateCalendarEvent(
             [FromBody] CalendarEvent calendarEvent,
-            [FromQuery(Name = "personIds[]")] string[] personIds
+            [FromQuery(Name = "userIds[]")] string[] userIds
         )
         {
             if (calendarEvent == null)
@@ -136,16 +136,16 @@ namespace API.Controllers
                 CalendarEvent = createdCalendarEvent.Entity as CalendarEvent
             };
 
-            if (personIds != null && personIds.Any())
+            if (userIds != null && userIds.Any())
             {
-                List<Participant> participants = personIds
+                List<Participant> participants = userIds
                     .Distinct()
                     .Select(
-                        personId =>
+                        userId =>
                             new Participant
                             {
                                 CalendarEventId = calendarEvent.Id,
-                                PersonId = Guid.Parse(personId)
+                                UserId = Guid.Parse(userId)
                             }
                     )
                     .ToList();

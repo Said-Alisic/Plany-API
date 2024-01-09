@@ -16,5 +16,5 @@ public class GetCalendarEventResponseDto : IGetCalendarEventResponseDto
 
     public string Status { get; set; }
 
-    public List<Person>? EventParticipants { get; set; }
+    public List<User>? EventParticipants { get; set; }
 };

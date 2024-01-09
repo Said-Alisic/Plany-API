@@ -14,11 +14,11 @@ namespace API.Data
 
         public DbSet<Participant> Participants { get; set; }
 
-        public DbSet<Person> Persons { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Participant>().HasKey(p => new { p.CalendarEventId, p.PersonId });
+            modelBuilder.Entity<Participant>().HasKey(p => new { p.CalendarEventId, p.UserId });
         }
     }
 }

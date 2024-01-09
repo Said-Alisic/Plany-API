@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Models
 {
-    [Table("participant")]
+    [Table("participants")]
     public class Participant
     {
         [ForeignKey("CalendarEvent")]
@@ -11,9 +11,15 @@ namespace API.Models
         [Column("calendarEventId", TypeName = "uuid")]
         public Guid CalendarEventId { get; set; }
 
-        [ForeignKey("Person")]
-        [Required(ErrorMessage = "PersonId is required")]
-        [Column("personId", TypeName = "uuid")]
-        public Guid PersonId { get; set; }
+        [ForeignKey("User")]
+        [Required(ErrorMessage = "UserId is required")]
+        [Column("userId", TypeName = "uuid")]
+        public Guid UserId { get; set; }
+
+        [Column("createdAt")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        [Column("updatedAt")]
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }
