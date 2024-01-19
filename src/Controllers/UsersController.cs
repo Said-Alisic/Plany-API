@@ -1,42 +1,32 @@
-﻿using API.Data;
+﻿using API.Common.Interfaces;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [Route("api/Users")]
+    [Route("api/users")]
     [ApiController]
     public class UsersController : Controller
     {
-        private readonly ApiDbContext _apiDbContext;
+        private readonly IUserService _userService;
 
-        public UsersController(ApiDbContext apiDbContext)
+        public UsersController(IUserService userService)
         {
-            _apiDbContext = apiDbContext;
-
-            _apiDbContext.Database.EnsureCreated();
+            _userService = userService;
         }
 
         // TODO: Add regex matching for the `email` query param
         [HttpGet, Route(""),]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers([FromQuery] string? email)
         {
-            IQueryable<User> query = _apiDbContext.Users;
+            IEnumerable<User> users = await _userService.GetUsersAsync(email);
 
-            if (Request.Query.ContainsKey("email"))
-            {
-                query = query.Where(item => item.Email.Equals(email));
-            }
-
-            User[] Users = await query.ToArrayAsync() ?? Array.Empty<User>();
-
-            if (Users == null || Users.Length == 0)
+            if (users == null || !users.Any())
             {
                 return NotFound();
             }
 
-            return Ok(Users);
+            return Ok(users);
         }
     }
 }
