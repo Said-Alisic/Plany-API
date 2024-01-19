@@ -1,4 +1,6 @@
-﻿using API.Data;
+﻿using API.Common.Interfaces;
+using API.Data;
+using API.Services;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -15,11 +17,13 @@ string password = Environment.GetEnvironmentVariable("DB_PASS") ?? "password";
 string connectionString =
     $"Host={host};Port={port};Database={dbName};Username={user};Password={password}";
 
-// Add services to the container.
-builder.Services.AddControllers();
-
 // Add database context with the configured connection string
 builder.Services.AddDbContext<ApiDbContext>(options => options.UseNpgsql(connectionString));
+
+// Add services and controllers to the container.
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddControllers();
 
 WebApplication app = builder.Build();
 
