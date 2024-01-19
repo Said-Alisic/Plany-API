@@ -7,10 +7,6 @@ on:
     paths:
       - "**.cs"
       - ".editorconfig"
-  push:
-    paths:
-      - "**.cs"
-      - ".editorconfig"
 
 jobs:
   dotnet-format:

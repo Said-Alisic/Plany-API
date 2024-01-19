@@ -1,4 +1,4 @@
-// Define the service interface
+﻿// Define the service interface
 using API.Common.Interfaces;
 using API.Data;
 using API.Models;
