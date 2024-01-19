@@ -1,13 +1,10 @@
 ﻿using API.Common.Dto;
 using API.Common.Helpers.AutoMapper;
-using API.Data;
+using API.Common.Interfaces;
 using API.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-#pragma warning disable CS8601 // Possible null reference assignment.
 #pragma warning disable CS8600, CS8602 // Converting null literal or possible null value to non-nullable type.
 
 namespace API.Controllers
@@ -16,15 +13,13 @@ namespace API.Controllers
     [ApiController]
     public class CalendarEventsController : Controller
     {
-        private readonly ApiDbContext _apiDbContext;
+        private readonly ICalendarEventsService _calendarEventsService;
         private readonly Mapper _mapper;
 
-        public CalendarEventsController(ApiDbContext apiDbContext)
+        public CalendarEventsController(ICalendarEventsService calendarEventsService)
         {
             // Setup db connection
-            _apiDbContext = apiDbContext;
-
-            _apiDbContext.Database.EnsureCreated();
+            _calendarEventsService = calendarEventsService;
 
             MapperConfiguration config = new MapperConfiguration(
                 cfg => cfg.AddProfile<CalendarEventMapperProfile>()
@@ -39,17 +34,10 @@ namespace API.Controllers
             [FromQuery] DateTime? date
         )
         {
-            IQueryable<CalendarEvent> query = _apiDbContext.CalendarEvents;
+            IEnumerable<CalendarEvent> calendarEvents =
+                await _calendarEventsService.GetCalendarEventsAsync(date);
 
-            if (Request.Query.ContainsKey("date"))
-            {
-                query = query.Where(item => item.DateAndTime.Date.Equals(date));
-            }
-
-            CalendarEvent[] calendarEvents =
-                await query.ToArrayAsync() ?? Array.Empty<CalendarEvent>();
-
-            if (calendarEvents == null || calendarEvents.Length == 0)
+            if (calendarEvents == null || !calendarEvents.Any())
             {
                 return NotFound();
             }
@@ -62,7 +50,7 @@ namespace API.Controllers
             ActionResult<GetCalendarEventResponseDto>
         > GetCalendarEventWithParticipantsInformation(
             [FromRoute] string id,
-            [FromQuery] bool omitEventParticipants = false
+            [FromQuery] bool shouldContainEventParticipants = true
         )
         {
             // Checks if the `id` is a GUID string, if successful, parses it and assigns it to a new variable
@@ -71,37 +59,26 @@ namespace API.Controllers
                 return BadRequest("Invalid GUID id format provided.");
             }
 
-            CalendarEvent calendarEvent =
-                await _apiDbContext.CalendarEvents.FindAsync(calendarEventId) ?? null;
+            CalendarEvent calendarEvent = await _calendarEventsService.GetCalendarEventAsync(
+                calendarEventId
+            );
 
             if (calendarEvent == null)
             {
                 return NotFound();
             }
 
-            GetCalendarEventResponseDto response = new GetCalendarEventResponseDto();
+            GetCalendarEventResponseDto response;
 
-            if (!omitEventParticipants)
+            if (shouldContainEventParticipants)
             {
-                List<Guid> participantsUserIds =
-                    await _apiDbContext
-                        .Participants.Where(item => item.CalendarEventId.Equals(calendarEventId))
-                        .Select(item => item.UserId)
-                        .ToListAsync() ?? null;
+                IEnumerable<User> eventParticipants =
+                    await _calendarEventsService.GetCalendarEventParticipantsAsync(calendarEventId);
 
-                // If participants' userIds were found, search database for those users and add it to the response
-                if (participantsUserIds != null && participantsUserIds.Any())
-                {
-                    List<User> eventParticipants =
-                        await _apiDbContext
-                            .Users.Where(item => participantsUserIds.Contains(item.Id))
-                            .ToListAsync() ?? null;
+                response = _mapper.Map<GetCalendarEventResponseDto>(calendarEvent);
+                response.EventParticipants = eventParticipants?.ToList();
 
-                    response = _mapper.Map<GetCalendarEventResponseDto>(calendarEvent);
-                    response.EventParticipants = eventParticipants;
-
-                    return Ok(response);
-                }
+                return Ok(response);
             }
 
             response = _mapper.Map<GetCalendarEventResponseDto>(calendarEvent);
@@ -126,37 +103,11 @@ namespace API.Controllers
                 return BadRequest("Invalid data provided.");
             }
 
-            EntityEntry createdCalendarEvent = await _apiDbContext.CalendarEvents.AddAsync(
-                calendarEvent
-            );
-
             // Define response object
-            CreateCalendarEventDto response = new CreateCalendarEventDto
-            {
-                CalendarEvent = createdCalendarEvent.Entity as CalendarEvent
-            };
-
-            if (userIds != null && userIds.Any())
-            {
-                List<Participant> participants = userIds
-                    .Distinct()
-                    .Select(
-                        userId =>
-                            new Participant
-                            {
-                                CalendarEventId = calendarEvent.Id,
-                                UserId = Guid.Parse(userId)
-                            }
-                    )
-                    .ToList();
-
-                await _apiDbContext.Participants.AddRangeAsync(participants);
-
-                // Add participants to response object if any
-                response.Participants = participants;
-            }
-
-            await _apiDbContext.SaveChangesAsync();
+            CreateCalendarEventDto response = await _calendarEventsService.CreateCalendarEventAsync(
+                calendarEvent,
+                userIds
+            );
 
             return Created("api/calendar-events", response);
         }
@@ -172,32 +123,24 @@ namespace API.Controllers
             }
 
             // Find CalendarEvent to delete.
-            CalendarEvent existingCalendarEvent = await _apiDbContext.CalendarEvents.FindAsync(
-                calendarEventId
-            );
+            CalendarEvent existingCalendarEvent =
+                await _calendarEventsService.GetCalendarEventAsync(calendarEventId);
 
             if (existingCalendarEvent == null)
             {
                 return NotFound("Calendar event with the given id could not be found.");
             }
 
-            // Prepare deletion of CalendarEvent in the db
-            _apiDbContext.CalendarEvents.Remove(existingCalendarEvent);
-
             try
             {
-                // Save changes to db
-                await _apiDbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException e)
-            {
-                throw new ApplicationException(
-                    "An error occured while saving changes to the database.",
-                    e
-                );
-            }
+                await _calendarEventsService.DeleteCalendarEventAsync(existingCalendarEvent);
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                throw new ApplicationException(e.Message, e);
+            }
         }
     }
 }

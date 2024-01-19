@@ -21,6 +21,7 @@ string connectionString =
 builder.Services.AddDbContext<ApiDbContext>(options => options.UseNpgsql(connectionString));
 
 // Add services and controllers to the container.
+builder.Services.AddScoped<ICalendarEventsService, CalendarEventsService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();
